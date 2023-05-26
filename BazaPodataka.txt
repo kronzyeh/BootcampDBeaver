@@ -1,0 +1,84 @@
+create database Bootcamp_Database
+
+create table Restaurant 
+	(
+		Id int not null generated always as identity primary key,
+		Title varchar(50),
+		Seats int
+	)
+
+create table Waiter
+	(
+		Id int not null generated always as identity primary key,
+		FirstName varchar(50),
+		LastName varchar(50),
+		Restaurant_Id int
+	)
+	
+ALTER TABLE Waiter
+DROP CONSTRAINT waiter_restaurant_fkey;
+
+
+create table Chef
+	(
+		Id int not null generated always as identity primary key,
+		FirstName varchar(50),
+		LastName varchar(50),
+		Restaurant int
+	);
+	
+ALTER TABLE Waiter
+DROP CONSTRAINT fk_chef_restaurant
+
+create table OrderDetails (
+	Id int not null generated always as identity primary key,
+	Amount int,
+	Items int
+);
+
+CREATE TABLE WaiterOrder (
+    Waiter int,
+    OrderDetails int,
+    PRIMARY KEY (Waiter, OrderDetails),
+    FOREIGN KEY (Waiter) REFERENCES Waiter (Id),
+    FOREIGN KEY (OrderDetails) REFERENCES OrderDetails (Id)
+);
+
+ALTER TABLE Restaurant
+ADD COLUMN ChefId int,
+ADD CONSTRAINT fk_restaurant_chef
+FOREIGN KEY (ChefId) REFERENCES Chef (Id);
+
+ALTER TABLE Restaurant
+DROP CONSTRAINT fk_restaurant_chef
+
+create table WelcomeDrink(
+	Id int not null generated always as identity primary key,
+	DrinkType varchar(50),
+	Alcohol bool
+);
+	
+ALTER TABLE Guest
+ADD COLUMN WelcomeDrinkId int,
+ADD CONSTRAINT fk_guest_welcomedrink
+FOREIGN KEY (WelcomeDrinkId) REFERENCES WelcomeDrink (Id);
+
+ALTER TABLE Guest
+ADD CONSTRAINT uk_guest_welcomedrink UNIQUE (WelcomeDrinkId);
+
+alter table guest 
+add column RestaurantId int,
+add constraint fk_guest_restaurant
+foreign key (RestaurantId) references Restaurant (Id);
+
+alter table restaurant 
+drop column chefid
+
+insert into Guest (firstname, guestage, welcomedrinkid, restaurantid)
+values ('Gost3', 13, 3, 2)
+
+insert into orderdetails (amount, items)
+values (25, 2);
+
+/* Tek sam kasnije saznao da moramo poslati komande u obliku .txt filea pa se u ovom ne nalaze bas sve koje sam koristio
+   u tablici, ali vecina je tu. /*
